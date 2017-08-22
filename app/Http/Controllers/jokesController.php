@@ -20,17 +20,48 @@ class jokesController extends Controller
 //        )->select('id','joke','user_id')->paginate(5);//here we are hard coding it should be dynamic
 //        return Response::json($this->transformCollection($jokes),200);
         //NOW MAKING PAGINATION DYNAMIC
+//        $limit = $request->input('limit')?$request->input('limit'):5;
+//
+//        $jokes = Joke::with(
+//            array('User'=>function($query){
+//                $query->select('id','name');
+//            })
+//        )->select('id', 'joke', 'user_id')->paginate($limit);
+//
+//        $jokes->appends(array(
+//            'limit' => $limit
+//        ));
+//
+//        return Response::json($this->transformCollection($jokes), 200);
+        //NOW IMPLEMENTING SEARCH FUNCTIONALITY
+        $search_term = $request->input('search');
         $limit = $request->input('limit')?$request->input('limit'):5;
 
-        $jokes = Joke::with(
-            array('User'=>function($query){
-                $query->select('id','name');
-            })
-        )->select('id', 'joke', 'user_id')->paginate($limit);
+        if ($search_term)
+        {
+            $jokes = Joke::orderBy('id', 'DESC')->where('joke', 'LIKE', "%$search_term%")->with(
+                array('User'=>function($query){
+                    $query->select('id','name');
+                })
+            )->select('id', 'joke', 'user_id')->paginate($limit);
 
-        $jokes->appends(array(
-            'limit' => $limit
-        ));
+            $jokes->appends(array(
+                'search' => $search_term,
+                'limit' => $limit
+            ));
+        }
+        else
+        {
+            $jokes = Joke::orderBy('id', 'DESC')->with(
+                array('User'=>function($query){
+                    $query->select('id','name');
+                })
+            )->select('id', 'joke', 'user_id')->paginate($limit);
+
+            $jokes->appends(array(
+                'limit' => $limit
+            ));
+        }
 
         return Response::json($this->transformCollection($jokes), 200);
 
