@@ -9,16 +9,30 @@ use Illuminate\Support\Facades\Response;
 class jokesController extends Controller
 {
     //
-    public function index()
+    public function index(Request $request)
     {
         //$jokes=Joke::all(); // NOT A GOOD METHOD
-        $jokes=Joke::with(
-            array('User'=>function($query)
-            {
+//        $jokes=Joke::with(
+//            array('User'=>function($query)
+//            {
+//                $query->select('id','name');
+//            })
+//        )->select('id','joke','user_id')->paginate(5);//here we are hard coding it should be dynamic
+//        return Response::json($this->transformCollection($jokes),200);
+        //NOW MAKING PAGINATION DYNAMIC
+        $limit = $request->input('limit')?$request->input('limit'):5;
+
+        $jokes = Joke::with(
+            array('User'=>function($query){
                 $query->select('id','name');
             })
-        )->select('id','joke','user_id')->paginate(5);//here we are hard coding it should be dynamic
-        return Response::json($this->transformCollection($jokes),200);
+        )->select('id', 'joke', 'user_id')->paginate($limit);
+
+        $jokes->appends(array(
+            'limit' => $limit
+        ));
+
+        return Response::json($this->transformCollection($jokes), 200);
 
     }
     public function show($id){
