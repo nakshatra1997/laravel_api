@@ -14,7 +14,7 @@ class CreateJokesTable extends Migration
     public function up()
     {
         //
-        Schema::create('jokes',function(Blueprint $table)
+        Schema::create('JokesTableSeeder',function(Blueprint $table)
         {
             $table->increments('id');
             $table->text('joke');
@@ -31,6 +31,6 @@ class CreateJokesTable extends Migration
     public function down()
     {
         //
-        Schema::drop('jokes');
+        Schema::drop('JokesTableSeeder');
     }
 }

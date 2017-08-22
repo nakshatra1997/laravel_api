@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\Joke;
 use App\User;
 
 // composer require laracasts/testdummy
@@ -16,7 +15,7 @@ class UsersTableSeeder extends Seeder
 
         foreach(range(1,5) as $index)
         {
-            User->create([
+            User::create([
                 'name' => $faker->userName,
                 'email' =>$faker->email,
                 'password' =>bcrypt('secret')
