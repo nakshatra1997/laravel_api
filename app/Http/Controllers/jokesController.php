@@ -50,5 +50,38 @@ class jokesController extends Controller
             'submitted_by'=>$joke['user']['name']
         ];
     }
-
+public function store(Request $request) //ERROR WILL BE THERE COZ OF CSRF TOKEN ,MAKE CHANGES TO KERNEL .PHP
+{
+    if(!$request->joke or !$request->user_id)
+    {
+        return Response::json([
+            'error'=>['message'=>'Please provide both joke and user_id']
+        ],422);
+    }
+    $joke=Joke::create($request->all());
+    return Response::json([
+        'message'=>'joke created successfully',
+        'data'=>$this->transform($joke)
+    ]);
+}
+public function update(Request $request ,$id)
+{
+    if(!$request->joke or !$request->user_id)
+    {
+        return Response::json([
+            'error'=>[
+                'message'=>'please provide both body and user_id'
+            ]
+        ],422);
+    }
+    $joke=Joke::find($id);
+    $joke->joke=$request->body;
+    $joke->user_id=$request->user_id;
+    $joke->save();
+    return Response::json(['message'=>'joke updated successfully']);
+}
+public function destroy($id)
+{
+    Joke::destroy($id);
+}
 }
