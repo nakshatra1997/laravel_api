@@ -8,7 +8,13 @@ use Illuminate\Support\Facades\Response;
 
 class jokesController extends Controller
 {
-    //
+    //NOW ADDING JWT AUTH
+    public function __construct()
+    {
+        //$this->middleware('auth.basic',['only'=>'store']);
+        $this->middleware('auth.basic');//this means we are using basic auth on all routes
+        //when we now try to view the route in the browser,we will first need to signin 
+    }
     public function index(Request $request)
     {
         //$jokes=Joke::all(); // NOT A GOOD METHOD
