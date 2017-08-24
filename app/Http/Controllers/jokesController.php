@@ -12,8 +12,8 @@ class jokesController extends Controller
     public function __construct()
     {
         //$this->middleware('auth.basic',['only'=>'store']);
-        $this->middleware('auth.basic');//this means we are using basic auth on all routes
-        //when we now try to view the route in the browser,we will first need to signin 
+        $this->middleware('jwt.auth');//this means we are using basic auth on all routes
+        //when we now try to view the route in the browser,we will first need to signin
     }
     public function index(Request $request)
     {
